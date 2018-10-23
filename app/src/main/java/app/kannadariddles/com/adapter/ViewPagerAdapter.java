@@ -1,4 +1,4 @@
-package app.kannadariddles.com.view.adapter;
+package app.kannadariddles.com.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
