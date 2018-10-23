@@ -27,6 +27,8 @@ dependencies {
     implementation "com.android.support:support-v4:${rootProject.ext.appCompatVersion}"
     implementation "com.android.support.constraint:constraint-layout:${rootProject.ext.constraintLayoutVersion}"
     implementation "com.google.firebase:firebase-database:${rootProject.ext.firebasedbVersion}"
+    //vertical viewpager
+    implementation "me.kaelaela:verticalviewpager:${rootProject.ext.verticalViewpagerVersion}"
 
     //testing dependencies
     testImplementation 'junit:junit:4.12'
