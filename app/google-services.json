@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "491822902005",
+    "firebase_url": "https://kannada-riddles.firebaseio.com",
+    "project_id": "kannada-riddles",
+    "storage_bucket": "kannada-riddles.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:491822902005:android:47430131d3381cc7",
+        "android_client_info": {
+          "package_name": "app.kannadariddles.com.kannadariddles"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "491822902005-71e93phvp9j9830938fbjos1jojhj5nv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.kannadariddles.com.kannadariddles",
+            "certificate_hash": "0e8de727d486e0bd0f13932fcb06b8818078bd70"
+          }
+        },
+        {
+          "client_id": "491822902005-9nfiofccp0i81a7q9see6m4la8eguatm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGRFsgRHbDSOtQiAvAnRg5N75vZnrnJQ0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "491822902005-9nfiofccp0i81a7q9see6m4la8eguatm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
