@@ -8,6 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.List;
 
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 if (riddles != null) {
                     Log.e(TAG, "Riddles received: " + riddles.size());
                     riddlesList = riddles;
-                    viewpagerAdapter = new ViewPagerAdapter(getApplicationContext(), riddlesList);
+                    viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, riddlesList);
                     //setting adapter
                     viewPager.setAdapter(viewpagerAdapter);
                     viewPager.setPageTransformer(false, new DefaultTransformer());
@@ -52,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void init() {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         viewPager = findViewById(R.id.main_viewpager_id);
         firebaseDB = new FirebaseDB(this);
         this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);

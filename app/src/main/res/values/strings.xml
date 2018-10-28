@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">KannadaRiddles</string>
+    <string name="hint_answer">ನಿಮ್ಮ ಉತ್ತರ</string>
+    <string name="clue">ಸುಳಿವು</string>
+    <string name="answer">ಉತ್ತರ</string>
+    <string name="submit_anser">ಉತ್ತರವನ್ನು ಸಲ್ಲಿಸಿ</string>
+    <string name="empty_answer">ದಯವಿಟ್ಟು ಉತ್ತರಿಸಿ</string>
+    <string name="correct_answer">ಸರಿಯಾದ ಉತ್ತರ</string>
+    <string name="wrong_answer">ತಪ್ಪು ಉತ್ತರ</string>
+    <string name="or">OR</string>
 </resources>

@@ -30,7 +30,6 @@ public class FirebaseDB {
     private MainViewModel mainViewModel;
     
     public FirebaseDB(AppCompatActivity activity) {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(KANNADA_RIDDLES);
         //enabling offline capabilities
@@ -41,14 +40,12 @@ public class FirebaseDB {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Riddle riddle = dataSnapshot.getValue(Riddle.class);
-                if (riddle != null) {
-                    List<Riddle> riddleList = new ArrayList<>();
-                    riddleList.add(riddle);
-                    mainViewModel.riddles.postValue(riddleList);
-                    Log.e(TAG, riddle.getRiddle() + "\n" + riddle.getClues() + "\n" + riddle.getAnswer());
-                } else
-                    Log.e(TAG, "Riddle received is NULL");
+                List<Riddle> riddleList = new ArrayList<>();
+                for (DataSnapshot riddleSnapShot : dataSnapshot.getChildren()) {
+                    riddleList.add(riddleSnapShot.getValue(Riddle.class));
+                    Log.e(TAG, riddleList.size() + ":" + riddleSnapShot.getValue().toString());
+                }
+                mainViewModel.riddles.postValue(riddleList);
             }
             
             @Override

@@ -22,6 +22,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:${rootProject.ext.appCompatVersion}"
+    implementation "com.android.support:design:${rootProject.ext.appCompatVersion}"
     implementation "com.android.support:animated-vector-drawable:${rootProject.ext.appCompatVersion}"
     implementation "com.android.support:support-media-compat:${rootProject.ext.appCompatVersion}"
     implementation "com.android.support:support-v4:${rootProject.ext.appCompatVersion}"
@@ -32,6 +33,7 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:${rootProject.ext.lifecycleVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.lifecycleVersion}"
+
 
 
     //testing dependencies
