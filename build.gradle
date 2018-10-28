@@ -36,4 +36,5 @@ ext {
     constraintLayoutVersion = '1.1.3'
     firebasedbVersion = '16.0.3'
     verticalViewpagerVersion = '1.0.0@aar'
+    lifecycleVersion = "1.1.1"
 }

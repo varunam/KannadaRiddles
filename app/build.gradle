@@ -29,6 +29,10 @@ dependencies {
     implementation "com.google.firebase:firebase-database:${rootProject.ext.firebasedbVersion}"
     //vertical viewpager
     implementation "me.kaelaela:verticalviewpager:${rootProject.ext.verticalViewpagerVersion}"
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:${rootProject.ext.lifecycleVersion}"
+    annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.lifecycleVersion}"
+
 
     //testing dependencies
     testImplementation 'junit:junit:4.12'
