@@ -11,10 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
+import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
 import app.kannadariddles.com.model.Riddle;
 
@@ -26,10 +26,12 @@ public class ViewPagerAdapter extends PagerAdapter {
     private static final String TAG = ViewPagerAdapter.class.getSimpleName();
     private Context context;
     private List<Riddle> riddlesList;
+    private AnsweredCallbacks answeredCallbacks;
     
-    public ViewPagerAdapter(Context context, List<Riddle> riddlesList) {
+    public ViewPagerAdapter(Context context, List<Riddle> riddlesList, AnsweredCallbacks answeredCallbacks) {
         this.context = context;
         this.riddlesList = riddlesList;
+        this.answeredCallbacks = answeredCallbacks;
     }
     
     @Override
@@ -53,7 +55,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         final TextView answerText = view.findViewById(R.id.answer_text_id);
         final EditText answerEditText = view.findViewById(R.id.answer_editText_id);
         
-        String answer = riddlesList.get(position).getAnswer();
+        final String answer = riddlesList.get(position).getAnswer();
         String[] answers;
         String answerInEnglish = "", answerInKannada = "";
         if (answer.contains("/")) {
@@ -82,9 +84,9 @@ public class ViewPagerAdapter extends PagerAdapter {
                     answerEditText.requestFocus();
                     answerEditText.setError(context.getResources().getString(R.string.empty_answer));
                 } else if (submittedAnswer.toLowerCase().equals(finalAnswerInEnglish) || submittedAnswer.equals(finalAnswerInKannada)) {
-                    Toast.makeText(context, context.getResources().getString(R.string.correct_answer), Toast.LENGTH_LONG).show();
+                    answeredCallbacks.answeredCorrect(submittedAnswer);
                 } else {
-                    Toast.makeText(context, context.getResources().getString(R.string.wrong_answer), Toast.LENGTH_LONG).show();
+                    answeredCallbacks.answeredIncorrect(answer, submittedAnswer);
                     answerText.setVisibility(View.VISIBLE);
                 }
             }

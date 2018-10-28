@@ -3,10 +3,12 @@ package app.kannadariddles.com.view.activities;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -14,14 +16,16 @@ import java.util.List;
 
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
 import app.kannadariddles.com.data.firebasedatabase.FirebaseDB;
+import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
 import app.kannadariddles.com.model.Riddle;
 import app.kannadariddles.com.viewmodels.MainViewModel;
 import me.kaelaela.verticalviewpager.transforms.DefaultTransformer;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AnsweredCallbacks {
     
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int NEXT_PAGE_INTERVAL = 2000;
     private ViewPagerAdapter viewpagerAdapter;
     private ViewPager viewPager;
     private FirebaseDB firebaseDB;
@@ -36,14 +40,14 @@ public class MainActivity extends AppCompatActivity {
         init();
         
         firebaseDB.init();
-    
+        
         mainViewModel.riddles.observe(this, new Observer<List<Riddle>>() {
             @Override
             public void onChanged(@Nullable List<Riddle> riddles) {
                 if (riddles != null) {
                     Log.e(TAG, "Riddles received: " + riddles.size());
                     riddlesList = riddles;
-                    viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, riddlesList);
+                    viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, riddlesList, MainActivity.this);
                     //setting adapter
                     viewPager.setAdapter(viewpagerAdapter);
                     viewPager.setPageTransformer(false, new DefaultTransformer());
@@ -58,5 +62,22 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.main_viewpager_id);
         firebaseDB = new FirebaseDB(this);
         this.mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+    }
+    
+    @Override
+    public void answeredCorrect(String submittedAnswer) {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.correct_answer), Toast.LENGTH_LONG).show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            }
+        },NEXT_PAGE_INTERVAL);
+    }
+    
+    @Override
+    public void answeredIncorrect(String correctAnswer, String submittedAnswer) {
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.wrong_answer), Toast.LENGTH_LONG).show();
+        
     }
 }
