@@ -38,4 +38,5 @@ ext {
     verticalViewpagerVersion = '1.0.0@aar'
     lifecycleVersion = "1.1.1"
     glideVersion = "4.8.0"
+    roomVersion = "1.1.1"
 }

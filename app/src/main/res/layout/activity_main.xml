@@ -10,7 +10,7 @@
     <me.kaelaela.verticalviewpager.VerticalViewPager
         android:id="@+id/main_viewpager_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></me.kaelaela.verticalviewpager.VerticalViewPager>
+        android:layout_height="match_parent"/>
 
     <ImageView
         android:id="@+id/loader_id"

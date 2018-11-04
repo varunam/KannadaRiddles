@@ -13,10 +13,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.lib.riddlesprovider.model.Riddle;
-
+import java.util.ArrayList;
 import java.util.List;
 
+import app.kannadariddles.com.data.model.KannadaRiddle;
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
@@ -28,13 +28,13 @@ public class ViewPagerAdapter extends PagerAdapter {
     
     private static final String TAG = ViewPagerAdapter.class.getSimpleName();
     private Context context;
-    private List<Riddle> riddlesList;
+    private List<KannadaRiddle> riddlesList;
     private AnsweredCallbacks answeredCallbacks;
     private VoiceInputClickCallbacks voiceInputClickCallbacks;
     
-    public ViewPagerAdapter(Context context, List<Riddle> riddlesList, AnsweredCallbacks answeredCallbacks, VoiceInputClickCallbacks voiceInputClickCallbacks) {
+    public ViewPagerAdapter(Context context, AnsweredCallbacks answeredCallbacks, VoiceInputClickCallbacks voiceInputClickCallbacks) {
         this.context = context;
-        this.riddlesList = riddlesList;
+        this.riddlesList = new ArrayList<>();
         this.answeredCallbacks = answeredCallbacks;
         this.voiceInputClickCallbacks = voiceInputClickCallbacks;
     }
@@ -49,6 +49,11 @@ public class ViewPagerAdapter extends PagerAdapter {
         return view == (RelativeLayout) o;
     }
     
+    public void setRiddlesList(List<KannadaRiddle> riddlesList) {
+        this.riddlesList = riddlesList;
+        notifyDataSetChanged();
+    }
+    
     @NonNull
     @Override
     public Object instantiateItem(@NonNull final ViewGroup container, int position) {
@@ -61,6 +66,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         final TextView answerText = view.findViewById(R.id.answer_text_id);
         final EditText answerEditText = view.findViewById(R.id.answer_editText_id);
         
+        //finding answers in english and kannada
         final String answer = riddlesList.get(position).getAnswer();
         String[] answers;
         String answerInEnglish = "", answerInKannada = "";
@@ -69,17 +75,19 @@ public class ViewPagerAdapter extends PagerAdapter {
             answerInKannada = answers[0].replaceAll(" ", "");
             answerInEnglish = answers[1].toLowerCase().replaceAll(" ", "");
         }
+        final String finalAnswerInEnglish = answerInEnglish;
+        final String finalAnswerInKannada = answerInKannada;
         
         clueTextView.setVisibility(View.GONE);
         answerText.setVisibility(View.GONE);
-    
-        final String finalAnswerInKannada = answerInKannada;
+        
         speechInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 voiceInputClickCallbacks.onVoiceInputClicked(finalAnswerInKannada);
             }
         });
+        
         clueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,7 +95,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 clueButton.setVisibility(View.INVISIBLE);
             }
         });
-        final String finalAnswerInEnglish = answerInEnglish;
+        
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,7 +113,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         });
         
         riddleTextView.setText(riddlesList.get(position).getRiddle());
-        clueTextView.setText(riddlesList.get(position).getClues());
+        clueTextView.setText(riddlesList.get(position).getClue());
         String shownAnswer = context.getResources().getString(R.string.answer) + ": " + riddlesList.get(position).getAnswer();
         answerText.setText(shownAnswer);
         

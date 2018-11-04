@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.FirebaseDatabase;
 import com.lib.riddlesprovider.RiddlesLoadedCallbacks;
 import com.lib.riddlesprovider.RiddlesProvider;
 import com.lib.riddlesprovider.model.Riddle;
@@ -24,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
+import app.kannadariddles.com.data.KannadaRiddlesDatabase;
+import app.kannadariddles.com.data.model.KannadaRiddle;
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     private TextView loaderText;
     private RelativeLayout mainLayout;
     private String expectedAnswer;
+    private KannadaRiddlesDatabase kannadaRiddlesDatabase;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     private void init() {
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        kannadaRiddlesDatabase = KannadaRiddlesDatabase.getInstance(this);
         viewPager = findViewById(R.id.main_viewpager_id);
         loader = findViewById(R.id.loader_id);
         mainLayout = findViewById(R.id.main_layout_id);
@@ -62,6 +64,11 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         Glide.with(getApplicationContext())
                 .load(R.drawable.ic_loader)
                 .into(loader);
+        
+        viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, MainActivity.this, MainActivity.this);
+        viewPager.setPageTransformer(false, new DefaultTransformer());
+        viewPager.setAdapter(viewpagerAdapter);
+        
         showLoader();
     }
     
@@ -102,13 +109,25 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
             hideLoader();
             setMainLayoutColor(getResources().getColor(R.color.colorPrimaryDark));
             Log.e(TAG, "Riddles received: " + riddles.size());
-            riddlesList = riddles;
-            viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, riddlesList, MainActivity.this, MainActivity.this);
-            //setting adapter
-            viewPager.setAdapter(viewpagerAdapter);
-            viewPager.setPageTransformer(false, new DefaultTransformer());
+            
+            loadRiddlesToDb(riddles);
+            
         } else
             Log.e(TAG, "Riddles received NULL");
+    }
+    
+    private void loadRiddlesToDb(List<Riddle> riddles) {
+        for (int i = 0; i < riddles.size(); i++) {
+            kannadaRiddlesDatabase.kannadaRiddlesDao().insertRiddle(
+                    new KannadaRiddle(
+                            riddles.get(i).getRiddle(),
+                            riddles.get(i).getClues(),
+                            riddles.get(i).getAnswer(),
+                            false,
+                            false
+                    )
+            );
+        }
     }
     
     @Override
@@ -135,5 +154,11 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
             default:
                 break;
         }
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        viewpagerAdapter.setRiddlesList(kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles());
     }
 }
