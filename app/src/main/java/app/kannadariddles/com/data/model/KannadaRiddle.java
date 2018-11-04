@@ -11,8 +11,8 @@ import android.arch.persistence.room.PrimaryKey;
 public class KannadaRiddle {
     
     private static final int scoreWithoutClue = 10;
-    private static final  int scoreWithClue = 5;
-    private static final  int answeredWrong = 0;
+    private static final int scoreWithClue = 5;
+    private static final int answeredWrong = 0;
     
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -83,5 +83,37 @@ public class KannadaRiddle {
     
     public void setScore(int score) {
         this.score = score;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
+    public void setRiddle(String riddle) {
+        this.riddle = riddle;
+    }
+    
+    public void setClue(String clue) {
+        this.clue = clue;
+    }
+    
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+    
+    public void setClueChecked(boolean clueChecked) {
+        this.clueChecked = clueChecked;
+        if (answeredCorrect && clueChecked)
+            this.score = scoreWithClue;
+        else if (answeredCorrect)
+            this.score = scoreWithoutClue;
+    }
+    
+    public void setAnsweredCorrect(boolean answeredCorrect) {
+        this.answeredCorrect = answeredCorrect;
+        if (clueChecked)
+            this.score = scoreWithClue;
+        else
+            this.score = scoreWithoutClue;
     }
 }

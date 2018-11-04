@@ -5,6 +5,7 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
+import android.database.Cursor;
 
 import java.util.List;
 
@@ -27,5 +28,8 @@ public interface KannadaRiddlesDao {
     
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateKannadaRiddle(KannadaRiddle kannadaRiddle);
+    
+    @Query("SELECT * FROM kannadariddles WHERE riddle = :riddle")
+    Cursor hasRiddle(String riddle);
     
 }

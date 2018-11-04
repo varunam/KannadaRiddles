@@ -31,18 +31,22 @@ import app.kannadariddles.com.kannadariddles.R;
 import app.kannadariddles.com.utils.SpeechUtils;
 import me.kaelaela.verticalviewpager.transforms.DefaultTransformer;
 
-public class MainActivity extends AppCompatActivity implements AnsweredCallbacks, RiddlesLoadedCallbacks, VoiceInputClickCallbacks {
+public class MainActivity extends AppCompatActivity implements AnsweredCallbacks, RiddlesLoadedCallbacks, VoiceInputClickCallbacks, ViewPager.OnPageChangeListener {
     
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQ_CODE_K2E_SPEECH_INPUT = 1001;
     private static final int NEXT_PAGE_INTERVAL = 2000;
     private ViewPagerAdapter viewpagerAdapter;
     private ViewPager viewPager;
-    private List<Riddle> riddlesList;
+    private List<KannadaRiddle> riddlesList;
     private ImageView loader;
     private TextView loaderText;
     private RelativeLayout mainLayout;
+    
     private String expectedAnswer;
+    private KannadaRiddle currentRiddle;
+    private int lastPagerPosition= 0;
+    
     private KannadaRiddlesDatabase kannadaRiddlesDatabase;
     
     @Override
@@ -68,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         viewpagerAdapter = new ViewPagerAdapter(MainActivity.this, MainActivity.this, MainActivity.this);
         viewPager.setPageTransformer(false, new DefaultTransformer());
         viewPager.setAdapter(viewpagerAdapter);
+        viewPager.setOnPageChangeListener(this);
         
         showLoader();
     }
@@ -87,7 +92,8 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     @Override
-    public void answeredCorrect(String submittedAnswer) {
+    public void answeredCorrect(KannadaRiddle kannadaRiddle, String submittedAnswer) {
+        kannadaRiddlesDatabase.kannadaRiddlesDao().updateKannadaRiddle(kannadaRiddle);
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.correct_answer), Toast.LENGTH_LONG).show();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -98,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     @Override
-    public void answeredIncorrect(String correctAnswer, String submittedAnswer) {
+    public void answeredIncorrect(KannadaRiddle kannadaRiddle, String correctAnswer, String submittedAnswer) {
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.wrong_answer), Toast.LENGTH_LONG).show();
         
     }
@@ -118,21 +124,26 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     
     private void loadRiddlesToDb(List<Riddle> riddles) {
         for (int i = 0; i < riddles.size(); i++) {
-            kannadaRiddlesDatabase.kannadaRiddlesDao().insertRiddle(
-                    new KannadaRiddle(
-                            riddles.get(i).getRiddle(),
-                            riddles.get(i).getClues(),
-                            riddles.get(i).getAnswer(),
-                            false,
-                            false
-                    )
-            );
+            if (kannadaRiddlesDatabase.kannadaRiddlesDao().hasRiddle(riddles.get(i).getRiddle()).getCount() == 0) {
+                KannadaRiddle kannadaRiddle = new KannadaRiddle(
+                        riddles.get(i).getRiddle(),
+                        riddles.get(i).getClues(),
+                        riddles.get(i).getAnswer(),
+                        false,
+                        false
+                );
+                kannadaRiddlesDatabase.kannadaRiddlesDao().insertRiddle(kannadaRiddle);
+            } else {
+                Log.d(TAG, "Riddle exists in table. Skipping...");
+            }
         }
     }
     
     @Override
-    public void onVoiceInputClicked(String expectedAnswer) {
+    public void onVoiceInputClicked(KannadaRiddle kannadaRiddle, String expectedAnswer) {
+        this.currentRiddle = kannadaRiddle;
         this.expectedAnswer = expectedAnswer;
+        
         new SpeechUtils(this).showAudioInputPromptKannada(REQ_CODE_K2E_SPEECH_INPUT);
     }
     
@@ -146,9 +157,12 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
                     ArrayList<String> result = data
                             .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
                     if (expectedAnswer.replaceAll(" ", "").equals(result.get(0).replaceAll(" ", ""))) {
-                        answeredCorrect(result.get(0));
-                    } else
-                        answeredIncorrect(expectedAnswer, result.get(0));
+                        currentRiddle.setAnsweredCorrect(true);
+                        answeredCorrect(currentRiddle, result.get(0));
+                    } else {
+                        currentRiddle.setAnsweredCorrect(false);
+                        answeredIncorrect(currentRiddle, expectedAnswer, result.get(0));
+                    }
                 }
                 break;
             default:
@@ -159,6 +173,24 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     @Override
     protected void onResume() {
         super.onResume();
-        viewpagerAdapter.setRiddlesList(kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles());
+        riddlesList = kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles();
+        /*viewpagerAdapter.setRiddlesList(riddlesList.subList(
+                new RiddlesTracker().getRiddlesIndex(getApplicationContext()),
+                riddlesList.size()
+        ));*/
+        viewpagerAdapter.setRiddlesList(riddlesList);
+    }
+    
+    @Override
+    public void onPageScrolled(int i, float v, int i1) {
+    
+    }
+    
+    @Override
+    public void onPageSelected(int i) {
+    }
+    
+    @Override
+    public void onPageScrollStateChanged(int i) {
     }
 }
