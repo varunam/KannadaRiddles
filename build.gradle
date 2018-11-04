@@ -37,4 +37,5 @@ ext {
     firebasedbVersion = '16.0.4'
     verticalViewpagerVersion = '1.0.0@aar'
     lifecycleVersion = "1.1.1"
+    glideVersion = "4.8.0"
 }

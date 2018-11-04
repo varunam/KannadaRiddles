@@ -8,4 +8,6 @@
     <string name="correct_answer">ಸರಿಯಾದ ಉತ್ತರ</string>
     <string name="wrong_answer">ತಪ್ಪು ಉತ್ತರ</string>
     <string name="or">OR</string>
+    <string name="loading_awesome_riddles">Loading awesome riddles...</string>
+    <string name="device_not_supported">Device not supported</string>
 </resources>

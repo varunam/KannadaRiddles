@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ import com.lib.riddlesprovider.model.Riddle;
 import java.util.List;
 
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
+import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
 
 /**
@@ -28,11 +30,13 @@ public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
     private List<Riddle> riddlesList;
     private AnsweredCallbacks answeredCallbacks;
+    private VoiceInputClickCallbacks voiceInputClickCallbacks;
     
-    public ViewPagerAdapter(Context context, List<Riddle> riddlesList, AnsweredCallbacks answeredCallbacks) {
+    public ViewPagerAdapter(Context context, List<Riddle> riddlesList, AnsweredCallbacks answeredCallbacks, VoiceInputClickCallbacks voiceInputClickCallbacks) {
         this.context = context;
         this.riddlesList = riddlesList;
         this.answeredCallbacks = answeredCallbacks;
+        this.voiceInputClickCallbacks = voiceInputClickCallbacks;
     }
     
     @Override
@@ -52,6 +56,7 @@ public class ViewPagerAdapter extends PagerAdapter {
         TextView riddleTextView = view.findViewById(R.id.riddle_text_id);
         final Button clueButton = view.findViewById(R.id.clue_button_id);
         final TextView clueTextView = view.findViewById(R.id.clue_text_id);
+        ImageView speechInput = view.findViewById(R.id.speech_input_id);
         Button answerButton = view.findViewById(R.id.answer_button_id);
         final TextView answerText = view.findViewById(R.id.answer_text_id);
         final EditText answerEditText = view.findViewById(R.id.answer_editText_id);
@@ -68,6 +73,12 @@ public class ViewPagerAdapter extends PagerAdapter {
         clueTextView.setVisibility(View.GONE);
         answerText.setVisibility(View.GONE);
         
+        speechInput.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                voiceInputClickCallbacks.onVoiceInputClicked();
+            }
+        });
         clueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

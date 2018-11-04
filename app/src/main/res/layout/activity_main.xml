@@ -1,15 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout_id"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimaryDark"
+    android:background="@color/white"
     tools:context="app.kannadariddles.com.view.activities.MainActivity">
 
     <me.kaelaela.verticalviewpager.VerticalViewPager
         android:id="@+id/main_viewpager_id"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </me.kaelaela.verticalviewpager.VerticalViewPager>
+        android:layout_height="match_parent"></me.kaelaela.verticalviewpager.VerticalViewPager>
 
-</android.support.constraint.ConstraintLayout>
+    <ImageView
+        android:id="@+id/loader_id"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true" />
+
+    <TextView
+        android:id="@+id/loader_text_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/loader_id"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/muli_semibold"
+        android:text="@string/loading_awesome_riddles"
+        android:textSize="14sp" />
+
+</RelativeLayout>
