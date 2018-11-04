@@ -72,11 +72,12 @@ public class ViewPagerAdapter extends PagerAdapter {
         
         clueTextView.setVisibility(View.GONE);
         answerText.setVisibility(View.GONE);
-        
+    
+        final String finalAnswerInKannada = answerInKannada;
         speechInput.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                voiceInputClickCallbacks.onVoiceInputClicked();
+                voiceInputClickCallbacks.onVoiceInputClicked(finalAnswerInKannada);
             }
         });
         clueButton.setOnClickListener(new View.OnClickListener() {
@@ -87,7 +88,6 @@ public class ViewPagerAdapter extends PagerAdapter {
             }
         });
         final String finalAnswerInEnglish = answerInEnglish;
-        final String finalAnswerInKannada = answerInKannada;
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

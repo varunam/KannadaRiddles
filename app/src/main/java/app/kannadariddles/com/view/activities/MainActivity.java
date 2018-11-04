@@ -1,7 +1,10 @@
 package app.kannadariddles.com.view.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.speech.RecognizerIntent;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -17,6 +20,7 @@ import com.lib.riddlesprovider.RiddlesLoadedCallbacks;
 import com.lib.riddlesprovider.RiddlesProvider;
 import com.lib.riddlesprovider.model.Riddle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     private ImageView loader;
     private TextView loaderText;
     private RelativeLayout mainLayout;
+    private String expectedAnswer;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +112,28 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     @Override
-    public void onVoiceInputClicked() {
+    public void onVoiceInputClicked(String expectedAnswer) {
+        this.expectedAnswer = expectedAnswer;
         new SpeechUtils(this).showAudioInputPromptKannada(REQ_CODE_K2E_SPEECH_INPUT);
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        
+        switch (requestCode) {
+            case REQ_CODE_K2E_SPEECH_INPUT:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> result = data
+                            .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    if (expectedAnswer.replaceAll(" ", "").equals(result.get(0).replaceAll(" ", ""))) {
+                        answeredCorrect(result.get(0));
+                    } else
+                        answeredIncorrect(expectedAnswer, result.get(0));
+                }
+                break;
+            default:
+                break;
+        }
     }
 }
