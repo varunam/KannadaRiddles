@@ -97,9 +97,9 @@ public class ViewPagerAdapter extends PagerAdapter {
         }
         
         if (kannadaRiddle.isAnsweredCorrect()) {
-            hideAnswer(riddleView);
+            disableAnswerInput(riddleView);
         } else {
-            showAnswer(riddleView);
+            enableAnswerInput(riddleView);
         }
         
         speechInput.setOnClickListener(new View.OnClickListener() {
@@ -127,10 +127,11 @@ public class ViewPagerAdapter extends PagerAdapter {
                 } else if (submittedAnswer.toLowerCase().replaceAll(" ", "").equals(finalAnswerInEnglish) || submittedAnswer.replaceAll(" ", "").equals(finalAnswerInKannada)) {
                     kannadaRiddle.setAnsweredCorrect(true);
                     answeredCallbacks.answeredCorrect(kannadaRiddle, submittedAnswer);
+                    disableAnswerInput(riddleView);
                 } else {
                     kannadaRiddle.setAnsweredCorrect(false);
                     answeredCallbacks.answeredIncorrect(kannadaRiddle, answer, submittedAnswer);
-                    showAnswer(riddleView);
+                    enableAnswerInput(riddleView);
                 }
             }
         });
@@ -151,6 +152,25 @@ public class ViewPagerAdapter extends PagerAdapter {
         
         answerButton.setVisibility(View.VISIBLE);
         answerText.setVisibility(View.GONE);
+    }
+    
+    private void disableAnswerInput(View view){
+        RelativeLayout inputLayout = view.findViewById(R.id.anwer_input_layout_id);
+        TextView answered = view.findViewById(R.id.already_answered_id);
+    
+        hideAnswer(view);
+    
+        inputLayout.setVisibility(View.GONE);
+        answered.setVisibility(View.VISIBLE);
+    }
+    
+    private void enableAnswerInput(View view){
+        RelativeLayout inputLayout = view.findViewById(R.id.anwer_input_layout_id);
+        TextView answered = view.findViewById(R.id.already_answered_id);
+    
+        showAnswer(view);
+        inputLayout.setVisibility(View.VISIBLE);
+        answered.setVisibility(View.GONE);
     }
     
     private void hideAnswer(View view) {

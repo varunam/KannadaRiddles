@@ -28,6 +28,7 @@ import app.kannadariddles.com.data.model.KannadaRiddle;
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
+import app.kannadariddles.com.utils.RiddlesTracker;
 import app.kannadariddles.com.utils.SpeechUtils;
 import me.kaelaela.verticalviewpager.transforms.DefaultTransformer;
 
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     
     private String expectedAnswer;
     private KannadaRiddle currentRiddle;
-    private int lastPagerPosition= 0;
     
     private KannadaRiddlesDatabase kannadaRiddlesDatabase;
     
@@ -137,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
                 Log.d(TAG, "Riddle exists in table. Skipping...");
             }
         }
+        if (riddlesList.size() < 1)
+            onResume();
     }
     
     @Override
@@ -174,16 +176,13 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     protected void onResume() {
         super.onResume();
         riddlesList = kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles();
-        /*viewpagerAdapter.setRiddlesList(riddlesList.subList(
-                new RiddlesTracker().getRiddlesIndex(getApplicationContext()),
-                riddlesList.size()
-        ));*/
         viewpagerAdapter.setRiddlesList(riddlesList);
+        viewPager.setCurrentItem(new RiddlesTracker().getRiddlesIndex(getApplicationContext()), true);
     }
     
     @Override
     public void onPageScrolled(int i, float v, int i1) {
-    
+        new RiddlesTracker().setRiddlesIndex(getApplicationContext(), i);
     }
     
     @Override

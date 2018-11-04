@@ -15,19 +15,9 @@ public class RiddlesTracker {
     private static final int DEFAULT_INDEX = 0;
     private SharedPreferences riddlesPreferences;
     
-    public void incrementRiddlesIndex(Context context) {
+    public void setRiddlesIndex(Context context, int index) {
         riddlesPreferences = context.getSharedPreferences(PREF_RIDDLES_INDEX, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = riddlesPreferences.edit();
-        int index = getRiddlesIndex(context) + 1;
-        Log.e(TAG,"Storing riddles index: " + index);
-        editor.putInt(INDEX_KEY, index);
-        editor.apply();
-    }
-    
-    public void decrementRiddlesIndex(Context context) {
-        riddlesPreferences = context.getSharedPreferences(PREF_RIDDLES_INDEX, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = riddlesPreferences.edit();
-        int index = getRiddlesIndex(context) - 1;
         Log.e(TAG,"Storing riddles index: " + index);
         editor.putInt(INDEX_KEY, index);
         editor.apply();
