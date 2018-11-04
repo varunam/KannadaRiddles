@@ -34,7 +34,7 @@ ext {
     versionCode = 1
     appCompatVersion = '28.0.0'
     constraintLayoutVersion = '1.1.3'
-    firebasedbVersion = '16.0.3'
+    firebasedbVersion = '16.0.4'
     verticalViewpagerVersion = '1.0.0@aar'
     lifecycleVersion = "1.1.1"
 }

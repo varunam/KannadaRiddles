@@ -1,8 +1,6 @@
-package app.kannadariddles.com.data.firebasedatabase;
+package com.lib.riddlesprovider;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -15,25 +13,23 @@ import com.lib.riddlesprovider.model.Riddle;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.kannadariddles.com.viewmodels.MainViewModel;
-
 /**
- * Created by varun.am on 28/10/18
+ * Created by varun.am on 04/11/18
  */
-public class FirebaseDB {
+public class RiddlesProvider {
     
-    private static final String TAG = FirebaseDB.class.getSimpleName();
+    private static final String TAG = RiddlesProvider.class.getSimpleName();
     private static final String KANNADA_RIDDLES = "KannadaRiddles";
     
+    private RiddlesLoadedCallbacks riddlesLoadedCallbacks;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
-    private MainViewModel mainViewModel;
     
-    public FirebaseDB(AppCompatActivity activity) {
+    public RiddlesProvider(RiddlesLoadedCallbacks riddlesLoadedCallbacks) {
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        this.riddlesLoadedCallbacks = riddlesLoadedCallbacks;
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(KANNADA_RIDDLES);
-        //enabling offline capabilities
-        mainViewModel = ViewModelProviders.of(activity).get(MainViewModel.class);
     }
     
     public void init() {
@@ -45,7 +41,7 @@ public class FirebaseDB {
                     riddleList.add(riddleSnapShot.getValue(Riddle.class));
                     Log.e(TAG, riddleList.size() + ":" + riddleSnapShot.getValue().toString());
                 }
-                mainViewModel.riddles.postValue(riddleList);
+                riddlesLoadedCallbacks.onRiddlesLoaded(riddleList);
             }
             
             @Override

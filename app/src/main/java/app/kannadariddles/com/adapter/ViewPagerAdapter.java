@@ -12,11 +12,12 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.lib.riddlesprovider.model.Riddle;
+
 import java.util.List;
 
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
-import app.kannadariddles.com.model.Riddle;
 
 /**
  * Created by varun.am on 23/10/18

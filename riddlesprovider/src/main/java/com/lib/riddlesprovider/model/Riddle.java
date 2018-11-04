@@ -1,4 +1,4 @@
-package app.kannadariddles.com.model;
+package com.lib.riddlesprovider.model;
 
 /**
  * Created by varun.am on 28/10/18

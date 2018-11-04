@@ -5,9 +5,9 @@ import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.MutableLiveData;
 import android.support.annotation.NonNull;
 
-import java.util.List;
+import com.lib.riddlesprovider.model.Riddle;
 
-import app.kannadariddles.com.model.Riddle;
+import java.util.List;
 
 /**
  * Created by varun.am on 28/10/18
