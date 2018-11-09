@@ -11,4 +11,9 @@
     <string name="loading_awesome_riddles">Loading awesome riddles...</string>
     <string name="device_not_supported">Device not supported</string>
     <string name="answered_already">ಉತ್ತರಿಸಲಾಗಿದೆ!!</string>
+    <string name="total_questions">Total Questions:</string>
+    <string name="with_clue">Answered with Clue:</string>
+    <string name="without_clue">Answered without clue:</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
