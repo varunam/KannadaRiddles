@@ -29,6 +29,9 @@ public interface KannadaRiddlesDao {
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateKannadaRiddle(KannadaRiddle kannadaRiddle);
     
+    @Query("SELECT SUM(score) FROM kannadariddles")
+    int getTotalScore();
+    
     @Query("SELECT * FROM kannadariddles WHERE riddle = :riddle")
     Cursor hasRiddle(String riddle);
     
