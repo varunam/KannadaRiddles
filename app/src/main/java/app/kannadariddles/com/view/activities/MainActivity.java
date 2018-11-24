@@ -28,6 +28,7 @@ import app.kannadariddles.RiddlesWidget;
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
 import app.kannadariddles.com.data.KannadaRiddlesDatabase;
 import app.kannadariddles.com.data.model.KannadaRiddle;
+import app.kannadariddles.com.executors.AppExecutors;
 import app.kannadariddles.com.interfaces.AnsweredCallbacks;
 import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
@@ -97,8 +98,13 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     @Override
-    public void answeredCorrect(KannadaRiddle kannadaRiddle, String submittedAnswer) {
-        kannadaRiddlesDatabase.kannadaRiddlesDao().updateKannadaRiddle(kannadaRiddle);
+    public void answeredCorrect(final KannadaRiddle kannadaRiddle, String submittedAnswer) {
+        AppExecutors.getInstance(getApplicationContext()).diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                kannadaRiddlesDatabase.kannadaRiddlesDao().updateKannadaRiddle(kannadaRiddle);
+            }
+        });
         Toast.makeText(getApplicationContext(), getResources().getString(R.string.correct_answer), Toast.LENGTH_LONG).show();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -127,20 +133,26 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
             Log.e(TAG, "Riddles received NULL");
     }
     
-    private void loadRiddlesToDb(List<Riddle> riddles) {
+    private void loadRiddlesToDb(final List<Riddle> riddles) {
         for (int i = 0; i < riddles.size(); i++) {
-            if (kannadaRiddlesDatabase.kannadaRiddlesDao().hasRiddle(riddles.get(i).getRiddle()).getCount() == 0) {
-                KannadaRiddle kannadaRiddle = new KannadaRiddle(
-                        riddles.get(i).getRiddle(),
-                        riddles.get(i).getClues(),
-                        riddles.get(i).getAnswer(),
-                        false,
-                        false
-                );
-                kannadaRiddlesDatabase.kannadaRiddlesDao().insertRiddle(kannadaRiddle);
-            } else {
-                Log.d(TAG, "Riddle exists in table. Skipping...");
-            }
+            final int finalI = i;
+            AppExecutors.getInstance(getApplicationContext()).diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (kannadaRiddlesDatabase.kannadaRiddlesDao().hasRiddle(riddles.get(finalI).getRiddle()).getCount() == 0) {
+                        KannadaRiddle kannadaRiddle = new KannadaRiddle(
+                                riddles.get(finalI).getRiddle(),
+                                riddles.get(finalI).getClues(),
+                                riddles.get(finalI).getAnswer(),
+                                false,
+                                false
+                        );
+                        kannadaRiddlesDatabase.kannadaRiddlesDao().insertRiddle(kannadaRiddle);
+                    } else {
+                        Log.d(TAG, "Riddle exists in table. Skipping...");
+                    }
+                }
+            });
         }
     }
     
@@ -178,9 +190,21 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     @Override
     protected void onResume() {
         super.onResume();
-        riddlesList = kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles();
-        viewpagerAdapter.setRiddlesList(riddlesList);
-        viewPager.setCurrentItem(new RiddlesTracker().getRiddlesIndex(getApplicationContext()), true);
+        AppExecutors.getInstance(getApplicationContext()).diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                riddlesList = kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        viewpagerAdapter.setRiddlesList(riddlesList);
+                        Log.e(TAG,"setRiddlesList");
+                        viewPager.setCurrentItem(new RiddlesTracker().getRiddlesIndex(getApplicationContext()), true);
+                        Log.e(TAG,"setCurrentItem " + new RiddlesTracker().getRiddlesIndex(getApplicationContext()));
+                    }
+                });
+            }
+        });
     }
     
     @Override
@@ -193,12 +217,12 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     
     @Override
     public void onPageScrolled(int i, float v, int i1) {
-        new RiddlesTracker().setRiddlesIndex(getApplicationContext(), i);
-        new RiddlesTracker().setLastRiddleAttended(getApplicationContext(), riddlesList.get(i));
     }
     
     @Override
     public void onPageSelected(int i) {
+        new RiddlesTracker().setRiddlesIndex(getApplicationContext(), i);
+        new RiddlesTracker().setLastRiddleAttended(getApplicationContext(), riddlesList.get(i));
     }
     
     @Override

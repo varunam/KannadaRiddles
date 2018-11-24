@@ -25,8 +25,6 @@ public abstract class KannadaRiddlesDatabase extends RoomDatabase {
                 Log.d(TAG,"Creating new database instance");
                 kannadaRiddlesDatabase = Room.databaseBuilder(context.getApplicationContext(),
                         KannadaRiddlesDatabase.class, DATABASE_NAME)
-                        //TODO temporary main thread
-                        .allowMainThreadQueries()
                         .build();
             }
         }
