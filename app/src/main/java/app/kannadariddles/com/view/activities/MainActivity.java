@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQ_CODE_K2E_SPEECH_INPUT = 1001;
-    private static final int NEXT_PAGE_INTERVAL = 2000;
+    private static final int NEXT_PAGE_INTERVAL = 500;
     private ViewPagerAdapter viewpagerAdapter;
     private ViewPager viewPager;
     private List<KannadaRiddle> riddlesList;
@@ -142,8 +142,6 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
                 Log.d(TAG, "Riddle exists in table. Skipping...");
             }
         }
-        if (riddlesList.size() < 1)
-            onResume();
     }
     
     @Override
