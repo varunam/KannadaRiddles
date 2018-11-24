@@ -1,5 +1,7 @@
 package app.kannadariddles.com.view.activities;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +24,7 @@ import com.lib.riddlesprovider.model.Riddle;
 import java.util.ArrayList;
 import java.util.List;
 
+import app.kannadariddles.RiddlesWidget;
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
 import app.kannadariddles.com.data.KannadaRiddlesDatabase;
 import app.kannadariddles.com.data.model.KannadaRiddle;
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     
     private String expectedAnswer;
     private KannadaRiddle currentRiddle;
+    private RiddlesProvider riddlesProvider;
     
     private KannadaRiddlesDatabase kannadaRiddlesDatabase;
     
@@ -56,7 +60,8 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         
         init();
         
-        new RiddlesProvider(this).init();
+        riddlesProvider = new RiddlesProvider();
+        riddlesProvider.loadRiddles(this);
     }
     
     private void init() {
@@ -181,8 +186,17 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     }
     
     @Override
+    protected void onStop() {
+        super.onStop();
+        
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), RiddlesWidget.class));
+        new RiddlesWidget().onUpdate(getApplicationContext(), AppWidgetManager.getInstance(getApplicationContext()), ids);
+    }
+    
+    @Override
     public void onPageScrolled(int i, float v, int i1) {
         new RiddlesTracker().setRiddlesIndex(getApplicationContext(), i);
+        new RiddlesTracker().setLastRiddleAttended(getApplicationContext(), riddlesList.get(i));
     }
     
     @Override

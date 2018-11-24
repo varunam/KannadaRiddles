@@ -2,9 +2,10 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:initialKeyguardLayout="@layout/riddles_widget"
     android:initialLayout="@layout/riddles_widget"
-    android:minWidth="40dp"
-    android:minHeight="40dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:minWidth="250dp"
+    android:minHeight="100dp"
+    android:previewImage="@drawable/riddles"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen"
+    />

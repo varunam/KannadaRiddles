@@ -21,18 +21,17 @@ public class RiddlesProvider {
     private static final String TAG = RiddlesProvider.class.getSimpleName();
     private static final String KANNADA_RIDDLES = "KannadaRiddles";
     
-    private RiddlesLoadedCallbacks riddlesLoadedCallbacks;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference databaseReference;
     
-    public RiddlesProvider(RiddlesLoadedCallbacks riddlesLoadedCallbacks) {
+    public RiddlesProvider() {
+        Log.d(TAG, "Creating RiddlesProvider instance");
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        this.riddlesLoadedCallbacks = riddlesLoadedCallbacks;
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(KANNADA_RIDDLES);
     }
     
-    public void init() {
+    public void loadRiddles(final RiddlesLoadedCallbacks riddlesLoadedCallbacks) {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
