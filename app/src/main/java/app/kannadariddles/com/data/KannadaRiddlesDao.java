@@ -1,5 +1,6 @@
 package app.kannadariddles.com.data;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
@@ -18,7 +19,7 @@ import app.kannadariddles.com.data.model.KannadaRiddle;
 public interface KannadaRiddlesDao {
     
     @Query("SELECT * FROM kannadariddles ORDER BY id")
-    List<KannadaRiddle> loadAllKannadaRiddles();
+    LiveData<List<KannadaRiddle>> loadAllKannadaRiddles();
     
     @Query("SELECT * FROM KannadaRiddles WHERE id = :id")
     KannadaRiddle loadRiddleById(int id);

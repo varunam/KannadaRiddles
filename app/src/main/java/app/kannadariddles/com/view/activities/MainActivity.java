@@ -1,6 +1,7 @@
 package app.kannadariddles.com.view.activities;
 
 import android.appwidget.AppWidgetManager;
+import android.arch.lifecycle.Observer;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -190,19 +191,14 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     @Override
     protected void onResume() {
         super.onResume();
-        AppExecutors.getInstance(getApplicationContext()).diskIO().execute(new Runnable() {
+        kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles().observe(this, new Observer<List<KannadaRiddle>>() {
             @Override
-            public void run() {
-                riddlesList = kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        viewpagerAdapter.setRiddlesList(riddlesList);
-                        Log.e(TAG,"setRiddlesList");
-                        viewPager.setCurrentItem(new RiddlesTracker().getRiddlesIndex(getApplicationContext()), true);
-                        Log.e(TAG,"setCurrentItem " + new RiddlesTracker().getRiddlesIndex(getApplicationContext()));
-                    }
-                });
+            public void onChanged(@Nullable List<KannadaRiddle> kannadaRiddles) {
+                riddlesList = kannadaRiddles;
+                viewpagerAdapter.setRiddlesList(riddlesList);
+                Log.e(TAG,"setRiddlesList");
+                viewPager.setCurrentItem(new RiddlesTracker().getRiddlesIndex(getApplicationContext()), true);
+                Log.e(TAG,"setCurrentItem " + new RiddlesTracker().getRiddlesIndex(getApplicationContext()));
             }
         });
     }
