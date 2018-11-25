@@ -21,7 +21,7 @@ public class SpeechUtils {
     public static final String LANG_KANNADA_IN = "kn_IN";
     private Activity activityContext;
     
-    public SpeechUtils(Activity activityContext){
+    public SpeechUtils(Activity activityContext) {
         this.activityContext = activityContext;
     }
     
@@ -39,7 +39,7 @@ public class SpeechUtils {
                 Toast.makeText(activityContext, R.string.device_not_supported, Toast.LENGTH_SHORT).show();
             }
         } else
-            Toast.makeText(activityContext, "Device not supported or \nLanguage not available", Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Device not supported or \nLanguage not available");
     }
     
     private boolean isLocalePresent(Locale newLocale) {
