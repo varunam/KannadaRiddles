@@ -27,7 +27,8 @@ import com.lib.riddlesprovider.model.Riddle;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.kannadariddles.RiddlesWidget;
+import app.kannadariddles.com.services.RiddlesLoadingScheduler;
+import app.kannadariddles.com.widget.RiddlesWidget;
 import app.kannadariddles.com.adapter.ViewPagerAdapter;
 import app.kannadariddles.com.data.KannadaRiddlesDatabase;
 import app.kannadariddles.com.data.model.KannadaRiddle;
@@ -91,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         viewPager.setOnPageChangeListener(this);
         
         showLoader();
+        RiddlesLoadingScheduler.scheduleRiddlesLoading(this);
     }
     
     /**

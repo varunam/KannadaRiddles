@@ -28,7 +28,7 @@ task clean(type: Delete) {
 
 ext {
     compileSdkVersion = 28
-    minSdkVersion = 17
+    minSdkVersion = 21
     targetSdkVersion = 28
     versionName = '1.0'
     versionCode = 1
@@ -39,4 +39,5 @@ ext {
     lifecycleVersion = "1.1.1"
     glideVersion = "4.8.0"
     roomVersion = "1.1.1"
+    firebaseJobDispatcherVersion = "0.8.5"
 }

@@ -1,4 +1,4 @@
-package app.kannadariddles;
+package app.kannadariddles.com.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;

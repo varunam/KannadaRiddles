@@ -49,6 +49,8 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:${rootProject.ext.lifecycleVersion}"
     annotationProcessor "android.arch.lifecycle:compiler:${rootProject.ext.lifecycleVersion}"
+    // firebase job dispatcher
+    implementation "com.firebase:firebase-jobdispatcher:${rootProject.ext.firebaseJobDispatcherVersion}"
 
 
 
@@ -56,4 +58,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 }

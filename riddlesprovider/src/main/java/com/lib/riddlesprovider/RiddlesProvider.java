@@ -26,7 +26,12 @@ public class RiddlesProvider {
     
     public RiddlesProvider() {
         Log.d(TAG, "Creating RiddlesProvider instance");
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        try {
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        } catch (Exception e) {
+            Log.e(TAG,"Couldn't set persistence as it was already set");
+            e.printStackTrace();
+        }
         firebaseDatabase = FirebaseDatabase.getInstance();
         databaseReference = firebaseDatabase.getReference(KANNADA_RIDDLES);
     }
