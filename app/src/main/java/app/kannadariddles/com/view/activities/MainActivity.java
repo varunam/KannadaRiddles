@@ -2,6 +2,7 @@ package app.kannadariddles.com.view.activities;
 
 import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import app.kannadariddles.com.interfaces.VoiceInputClickCallbacks;
 import app.kannadariddles.com.kannadariddles.R;
 import app.kannadariddles.com.utils.RiddlesTracker;
 import app.kannadariddles.com.utils.SpeechUtils;
+import app.kannadariddles.com.viewmodels.MainViewModel;
 import me.kaelaela.verticalviewpager.transforms.DefaultTransformer;
 
 public class MainActivity extends AppCompatActivity implements AnsweredCallbacks, RiddlesLoadedCallbacks, VoiceInputClickCallbacks, ViewPager.OnPageChangeListener {
@@ -195,7 +197,8 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
     @Override
     protected void onResume() {
         super.onResume();
-        kannadaRiddlesDatabase.kannadaRiddlesDao().loadAllKannadaRiddles().observe(this, new Observer<List<KannadaRiddle>>() {
+        MainViewModel mainViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mainViewModel.getRiddles().observe(this, new Observer<List<KannadaRiddle>>() {
             @Override
             public void onChanged(@Nullable List<KannadaRiddle> kannadaRiddles) {
                 riddlesList = kannadaRiddles;
