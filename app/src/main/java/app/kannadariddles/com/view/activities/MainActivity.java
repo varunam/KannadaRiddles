@@ -72,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         riddlesProvider.loadRiddles(this);
     }
     
+    /**
+     * initializations
+     */
     private void init() {
         kannadaRiddlesDatabase = KannadaRiddlesDatabase.getInstance(this);
         viewPager = findViewById(R.id.main_viewpager_id);
@@ -90,16 +93,26 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
         showLoader();
     }
     
+    /**
+     * show loader and indicate user that the app is waiting for some task to be finished
+     */
     private void showLoader() {
         loader.setVisibility(View.VISIBLE);
         loaderText.setVisibility(View.VISIBLE);
     }
     
+    /**
+     * hide loader once required task is completed
+     */
     private void hideLoader() {
         loader.setVisibility(View.GONE);
         loaderText.setVisibility(View.GONE);
     }
     
+    /**
+     * to change main layout color
+     * @param colorId - color to which main layout should change to
+     */
     private void setMainLayoutColor(int colorId) {
         mainLayout.setBackgroundColor(colorId);
     }
@@ -140,6 +153,10 @@ public class MainActivity extends AppCompatActivity implements AnsweredCallbacks
             Log.e(TAG, "Riddles received NULL");
     }
     
+    /**
+     * loading riddles to local database
+     * @param riddles - riddles to be loaded to local database
+     */
     private void loadRiddlesToDb(final List<Riddle> riddles) {
         for (int i = 0; i < riddles.size(); i++) {
             final int finalI = i;
