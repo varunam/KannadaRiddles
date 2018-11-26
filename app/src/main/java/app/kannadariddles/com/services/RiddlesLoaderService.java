@@ -8,6 +8,7 @@ import com.lib.riddlesprovider.RiddlesLoadedCallbacks;
 import com.lib.riddlesprovider.RiddlesProvider;
 import com.lib.riddlesprovider.model.Riddle;
 
+import java.lang.ref.SoftReference;
 import java.util.List;
 
 import app.kannadariddles.com.data.KannadaRiddlesDatabase;
@@ -21,16 +22,16 @@ public class RiddlesLoaderService extends AsyncTask<Void, Void, Void> implements
     
     private static final String TAG = RiddlesLoaderService.class.getSimpleName();
     private KannadaRiddlesDatabase kannadaRiddlesDatabase;
-    private Context context;
+    private SoftReference<Context> context;
     
     public RiddlesLoaderService(Context context) {
-        this.context = context;
+        this.context = new SoftReference<>(context);
         kannadaRiddlesDatabase = KannadaRiddlesDatabase.getInstance(context);
     }
     
     @Override
     protected Void doInBackground(Void... voids) {
-        Log.e(TAG,"Triggering riddles loading");
+        Log.e(TAG, "Triggering riddles loading");
         RiddlesProvider riddlesProvider = new RiddlesProvider();
         riddlesProvider.loadRiddles(this);
         return null;
@@ -48,10 +49,10 @@ public class RiddlesLoaderService extends AsyncTask<Void, Void, Void> implements
      * @param riddles - riddles to be loaded to local database
      */
     private void loadRiddlesToDb(final List<Riddle> riddles) {
-        Log.e(TAG,"Loading riddles to local database");
+        Log.e(TAG, "Loading riddles to local database");
         for (int i = 0; i < riddles.size(); i++) {
             final int finalI = i;
-            AppExecutors.getInstance(context).diskIO().execute(new Runnable() {
+            AppExecutors.getInstance(context.get()).diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     if (kannadaRiddlesDatabase.kannadaRiddlesDao().hasRiddle(riddles.get(finalI).getRiddle()).getCount() == 0) {
@@ -69,7 +70,7 @@ public class RiddlesLoaderService extends AsyncTask<Void, Void, Void> implements
                 }
             });
         }
-        Log.e(TAG,"Loading riddles to db finished");
-        RiddlesLoadingScheduler.scheduleRiddlesLoading(context);
+        Log.e(TAG, "Loading riddles to db finished");
+        RiddlesLoadingScheduler.scheduleRiddlesLoading(context.get());
     }
 }
